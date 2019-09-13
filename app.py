@@ -49,24 +49,24 @@ def GetService(api_name, api_version, scope, client_secrets_path):
 
   return service
 
-def FindContainer(service, account_path):
+def FindContainer(service, account_path, container_name):
   """Find the container.
 
   Args:
     service: the Tag Manager service object.
-    account_path: the path of the Tag Manager account from which to retrieve the
-      Greetings container.
+    account_path: the path of the Tag Manager account from which to retrieve the container.
 
   Returns:
-    The greetings container if it exists, or None if it does not.
+    The container if it exists, or None if it does not.
   """
   # Query the Tag Manager API to list all containers for the given account.
   container_wrapper = service.accounts().containers().list(
       parent=account_path).execute()
 
-  # Find and return the Greetings container if it exists.
+  # Find and return the container if it exists.
   for container in container_wrapper['container']:
-    if container['name'] == 'Greetings':
+    if container['name'] == container_name:
+      print(container)
       return container
     else: 
       print("No greeting is found")
@@ -74,8 +74,9 @@ def FindContainer(service, account_path):
 
 def main(argv):
   # Get tag manager account ID from command line.
-  assert len(argv) == 2 and 'usage: app.py <account_id>'
+  assert len(argv) == 3 and 'usage: app.py <account_id> <container_name>'
   account_id = str(argv[1])
+  container_name = str(argv[2])
   account_path = 'accounts/%s' % account_id
   # Define the auth scopes to request.
   scope = ['https://www.googleapis.com/auth/tagmanager.edit.containers']
@@ -83,8 +84,8 @@ def main(argv):
   # Authenticate and construct service.
   service = GetService('tagmanager', 'v2', scope, 'client_secret.json')
 
-  # Find the greetings container.
-  container = FindContainer(service, account_path)
+  # Find the container.
+  container = FindContainer(service, account_path, container_name)
 
 if __name__ == '__main__':
   main(sys.argv)
