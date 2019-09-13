@@ -50,7 +50,7 @@ def GetService(api_name, api_version, scope, client_secrets_path):
   return service
 
 def FindContainer(service, account_path, container_name):
-  """Find the container.
+  """Find a container named <container_name>.
 
   Args:
     service: the Tag Manager service object.
@@ -72,11 +72,102 @@ def FindContainer(service, account_path, container_name):
       print("No greeting is found")
   return None
 
+def CreateWorkspace(service, container, work_space_name):
+    """Creates a workspace named <work_space_name>.
+
+    Args:
+      service: the Tag Manager service object.
+      container: the container to insert the workspace within.
+      work_space_name: the workspace name you want to create 
+
+    Returns:
+      The created workspace.
+    """
+    return service.accounts().containers().workspaces().create(
+        parent=container['path'],
+        body={
+            'name': work_space_name,
+        }).execute()
+
+def CreateHelloWorldTag(service, workspace):
+  """Create the Hello World Tag.
+
+  Args:
+    service: the Tag Manager service object.
+    workspace: the workspace to create a tag within.
+
+  Returns:
+    The created tag.
+  """
+
+  hello_world_tag = {
+      'name': 'Hello World Tag',
+      'type': 'html',
+      'parameter': [
+          {
+      "key": "html",
+      "type": "template",
+      "value": "<script>alert('hello world')</script>"
+          }]
+  }
+
+  return service.accounts().containers().workspaces().tags().create(
+      parent=workspace['path'],
+      body=hello_world_tag).execute()
+
+
+
+def CreateHelloWorldTrigger(service, workspace):
+  """Create the Hello World Trigger.
+
+  Args:
+    service: the Tag Manager service object.
+    workspace: the workspace to create the trigger within.
+
+  Returns:
+    The created trigger.
+  """
+
+  hello_world_trigger = {
+      'name': 'Hello World Rule',
+      'type': 'PAGEVIEW'
+  }
+
+  return service.accounts().containers().workspaces().triggers().create(
+      parent=workspace['path'],
+      body=hello_world_trigger).execute()
+
+
+def UpdateHelloWorldTagWithTrigger(service, tag, trigger):
+  """Update a Tag with a Trigger.
+
+  Args:
+    service: the Tag Manager service object.
+    tag: the tag to associate with the trigger.
+    trigger: the trigger to associate with the tag.
+  """
+  # Get the tag to update.
+  tag = service.accounts().containers().workspaces().tags().get(
+      path=tag['path']).execute()
+
+  # Update the Firing Trigger for the Tag.
+  tag['firingTriggerId'] = [trigger['triggerId']]
+
+  # Update the Tag.
+  response = service.accounts().containers().workspaces().tags().update(
+      path=tag['path'],
+      body=tag).execute()
+  
+  print(response)
+    
+    
+
 def main(argv):
   # Get tag manager account ID from command line.
-  assert len(argv) == 3 and 'usage: app.py <account_id> <container_name>'
+  assert len(argv) == 4 and 'usage: app.py <account_id> <container_name> <work_space_name>'
   account_id = str(argv[1])
   container_name = str(argv[2])
+  work_space_name = str(argv[3])
   account_path = 'accounts/%s' % account_id
   # Define the auth scopes to request.
   scope = ['https://www.googleapis.com/auth/tagmanager.edit.containers']
@@ -86,6 +177,23 @@ def main(argv):
 
   # Find the container.
   container = FindContainer(service, account_path, container_name)
+
+  # Create workspace. 
+  workspace = CreateWorkspace(service, container, work_space_name)
+
+  # Create tag
+  tag = CreateHelloWorldTag(service, workspace)
+
+  # Create trigger 
+  trigger = CreateHelloWorldTrigger(service, workspace)
+
+  # Update tag to bind trigger
+  UpdateHelloWorldTagWithTrigger(service, tag, trigger)
+
+
+
+
+
 
 if __name__ == '__main__':
   main(sys.argv)
