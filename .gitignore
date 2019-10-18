@@ -1,3 +1,5 @@
 requirements.txt
 tagmanager.dat
 client_secret.json
+template.json
+__pycache__
