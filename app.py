@@ -152,14 +152,17 @@ class TagGenetator:
       Update tag. 
     """
     existing_tags = service.accounts().containers().workspaces().tags().list(parent=work_space['path']).execute()
-    existing_tags_name = list(map(lambda x: x["name"], existing_tags["tag"]))
     ## Check tags you want to update is included in existing tags
-    tags_updated = [x for x in tags if lambda x: x["name"] in existing_tags_name]
-    path_to_tag_updated = [y["path"] for y in existing_tags["tag"] if lambda y: y["name"] in tags_updated]
-    print(tags_updated)
-    print(path_to_tag_updated)
-    ## 今欲しいのは、updateするタグへのpath
-    ##return list(map(lambda tag: service.accounts().containers().workspaces().tags().update(path=path_to_tag_updated,body=tag).execute(), tags_updated))
+    tags_to_be_updated = self.compare_existing_tags_and_tags_updated(existing_tags, tags)
+    return list(map(lambda tag: service.accounts().containers().workspaces().tags().update(path=tag["path"], body=tag["body"]).execute(), tags_to_be_updated))
+  
+  def compare_existing_tags_and_tags_updated(self, existing_tags, tags_updated):
+    tags_to_be_updated = []
+    for existing_tag in existing_tags["tag"]:
+      for tag_updated in tags_updated:
+        if tag_updated["name"] == existing_tag["name"]:
+          tags_to_be_updated.append({"path": existing_tag["path"], "body": tag_updated})
+    return tags_to_be_updated
 
 def CreateHelloWorldTrigger(service, workspace):
   """Create the Hello World Trigger.
