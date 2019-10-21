@@ -137,20 +137,29 @@ class TagGenetator:
       The created tag.
     """
     existing_tags = service.accounts().containers().workspaces().tags().list(parent=work_space['path']).execute()
-    if len(existing_tags["tag"]) > 0:
+    if existing_tags == {}:
+      ## In case no tag existed
+      print("no tags existed...")
+      return list(map(lambda tag: service.accounts().containers().workspaces().tags().create(parent=work_space['path'],body=tag).execute(), tags))
+    elif len(existing_tags["tag"]) > 0:
       existing_tags_name = list(map(lambda x: x["name"], existing_tags["tag"]))
       ## Check tags you want to create is included in existing tags
       new_tags_candidates = [x for x in tags if lambda x: x["name"] not in existing_tags_name]
-      map(lambda tag: service.accounts().containers().workspaces().tags().create(parent=work_space['path'],body=tag).execute(), new_tags_candidates)
-    else:
-      ## In case no tag existed
-      map(lambda tag: service.accounts().containers().workspaces().tags().create(parent=work_space['path'],body=tag).execute(), tags)
-  ##def update_tag(self, service, work_space, tags)
-  ##  pass
-
-    ##return service.accounts().containers().workspaces().tags().create(
-    ##  parent=work_space['path'],
-    ##  body=tag).execute()
+      return list(map(lambda tag: service.accounts().containers().workspaces().tags().create(parent=work_space['path'],body=tag).execute(), new_tags_candidates))
+  
+  def update_tag(self, service, work_space, tags):
+    """
+      Update tag. 
+    """
+    existing_tags = service.accounts().containers().workspaces().tags().list(parent=work_space['path']).execute()
+    existing_tags_name = list(map(lambda x: x["name"], existing_tags["tag"]))
+    ## Check tags you want to update is included in existing tags
+    tags_updated = [x for x in tags if lambda x: x["name"] in existing_tags_name]
+    path_to_tag_updated = [y["path"] for y in existing_tags["tag"] if lambda y: y["name"] in tags_updated]
+    print(tags_updated)
+    print(path_to_tag_updated)
+    ## 今欲しいのは、updateするタグへのpath
+    ##return list(map(lambda tag: service.accounts().containers().workspaces().tags().update(path=path_to_tag_updated,body=tag).execute(), tags_updated))
 
 def CreateHelloWorldTrigger(service, workspace):
   """Create the Hello World Trigger.
@@ -251,6 +260,8 @@ if __name__ == '__main__':
     # Get or Create the workspace
     work_space = tag_generator.get_work_space(service, container, work_space_name)
     # Create or Update tags.
-    tag_generator.create_tag(service, work_space, tags)
+    updated_tags = tag_generator.update_tag(service, work_space, tags)
+    print(updated_tags)
+    ## tag_generator.create_tag(service, work_space,tags)
 
     

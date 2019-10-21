@@ -4,6 +4,8 @@
 - 下記を参考にGTMのTOKENを取得してください
 
 
+# Tagに関してのReference 
+- https://developers.google.com/tag-manager/api/v2/tag-dictionary-reference
 
 
 ```
