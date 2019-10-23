@@ -10,6 +10,8 @@ from apiclient.discovery import build
 from oauth2client import client
 from oauth2client import file
 from oauth2client import tools
+from tagManager import TagManager
+from triggerManager import TriggerManager
 from util import find_work_space 
 
 
@@ -25,10 +27,12 @@ from util import find_work_space
 
 
 class TagGenetator:
-  def __init__(self):
+  def __init__(self, tag_manager, trigger_manager):
     print("instantiated")
     # Define the auth scopes to request.
     self.scope = ['https://www.googleapis.com/auth/tagmanager.edit.containers']
+    self.tag_manager = tag_manager
+    self.trigger_manager = trigger_manager
   
   def get_service(self, api_name, api_version, client_secrets_path):
     """Get a service that communicates to a Google API.
@@ -123,46 +127,11 @@ class TagGenetator:
       return workspace[0]
     else:
       self.create_work_space(service, container, work_space_name) 
-
-
-  def create_tag(self, service, work_space, tags):
-    """Create the Tag.
-
-    Args:
-      service: the Tag Manager service object.
-      workspace: the workspace to create a tag within.
-      tags: the list of tag information you want to create.
-
-    Returns:
-      The created tag.
-    """
-    existing_tags = service.accounts().containers().workspaces().tags().list(parent=work_space['path']).execute()
-    if existing_tags == {}:
-      ## In case no tag existed
-      print("no tags existed...")
-      return list(map(lambda tag: service.accounts().containers().workspaces().tags().create(parent=work_space['path'],body=tag).execute(), tags))
-    elif len(existing_tags["tag"]) > 0:
-      existing_tags_name = list(map(lambda x: x["name"], existing_tags["tag"]))
-      ## Check tags you want to create is included in existing tags
-      new_tags_candidates = [x for x in tags if lambda x: x["name"] not in existing_tags_name]
-      return list(map(lambda tag: service.accounts().containers().workspaces().tags().create(parent=work_space['path'],body=tag).execute(), new_tags_candidates))
   
-  def update_tag(self, service, work_space, tags):
-    """
-      Update tag. 
-    """
-    existing_tags = service.accounts().containers().workspaces().tags().list(parent=work_space['path']).execute()
-    ## Check tags you want to update is included in existing tags
-    tags_to_be_updated = self.compare_existing_tags_and_tags_updated(existing_tags, tags)
-    return list(map(lambda tag: service.accounts().containers().workspaces().tags().update(path=tag["path"], body=tag["body"]).execute(), tags_to_be_updated))
-  
-  def compare_existing_tags_and_tags_updated(self, existing_tags, tags_updated):
-    tags_to_be_updated = []
-    for existing_tag in existing_tags["tag"]:
-      for tag_updated in tags_updated:
-        if tag_updated["name"] == existing_tag["name"]:
-          tags_to_be_updated.append({"path": existing_tag["path"], "body": tag_updated})
-    return tags_to_be_updated
+
+
+
+
 
 def CreateHelloWorldTrigger(service, workspace):
   """Create the Hello World Trigger.
@@ -245,9 +214,10 @@ def main(argv):
 
 
 if __name__ == '__main__':
-  
-  tag_generator = TagGenetator()
-  
+  tag_manager = TagManager()
+  trigger_manager = TriggerManager()
+  tag_generator = TagGenetator(tag_manager, trigger_manager)
+
   with open("template.json") as config:
     data = json.load(config)
     # Get tag manager account ID
@@ -263,8 +233,8 @@ if __name__ == '__main__':
     # Get or Create the workspace
     work_space = tag_generator.get_work_space(service, container, work_space_name)
     # Create or Update tags.
-    updated_tags = tag_generator.update_tag(service, work_space, tags)
-    print(updated_tags)
+    ## updated_tags = tag_generator.update_tag(service, work_space, tags)
+    ## print(updated_tags)
     ## tag_generator.create_tag(service, work_space,tags)
 
     
