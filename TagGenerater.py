@@ -124,7 +124,8 @@ class TagGenetator:
       self.create_work_space(service, container, work_space_name)
   
   def handle_trigger(self, service, workspace, triggers):
-      self.trigger_manager.create_trigger(service, workspace, triggers)
+      #self.trigger_manager.create_trigger(service, workspace, triggers)
+      self.trigger_manager.update_trigger(service, workspace, triggers)
   
 
 

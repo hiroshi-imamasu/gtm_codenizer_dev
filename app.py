@@ -8,10 +8,13 @@ from tagGenerater import TagGenetator
   TODO:
     1. Create TagGenerator class 
       - How to decide update or create
+      - How to bind trigger to tag
     
-    2. Create Parse json class
+    2. Create Parse json method
+
+    3. Introduce command line library
     
-    3. Dockernize   
+    4. Dockernize   
 """
 
 def UpdateHelloWorldTagWithTrigger(service, tag, trigger):
@@ -44,6 +47,8 @@ if __name__ == '__main__':
   trigger_manager = TriggerManager()
   tag_generator = TagGenetator(tag_manager, trigger_manager)
 
+  print("Processing....")
+
   with open("template.json") as config:
     data = json.load(config)
     # Get tag manager account ID
@@ -64,7 +69,7 @@ if __name__ == '__main__':
     ## print(updated_tags)
     ## tag_generator.create_tag(service, work_space,tags)
     
-    # Create triggers
+    # Create or Update triggers
     print(tag_generator.handle_trigger(service, work_space, triggers))
 
     
