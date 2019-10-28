@@ -14,10 +14,15 @@
 python app.py
 ```
 
+# 
 
 
 - 出来てほしいこと
-  - 新規のtag/triggerの作成
-  - 既存のtag/triggerのupdate
-  - Command lineとして使う
+  - [x] 新規のtagの作成
+  - [] 既存のtagの更新
+  - [x] 新規triggerの作成
+  - [] triggerの更新
+  - [] tagとtriggerのbind
+  - [] Command line tool化
   　--ta c / u --tg c / u
+  - [] Docernize

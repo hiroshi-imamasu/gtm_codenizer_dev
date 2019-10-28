@@ -6,8 +6,7 @@ import httplib2
 from apiclient.discovery import build
 from oauth2client import client
 from oauth2client import file
-from oauth2client import tools
-from util import find_work_space 
+from oauth2client import tools 
 
 
 """
@@ -21,7 +20,7 @@ from util import find_work_space
 """
 
 
-class TagGenetator:
+class GtmGenetator:
   def __init__(self, tag_manager, trigger_manager):
     print("instantiated")
     # Define the auth scopes to request.
@@ -123,57 +122,31 @@ class TagGenetator:
     else:
       self.create_work_space(service, container, work_space_name)
   
+  def handle_tag(self, service, workspace, tags):
+    #self.tag_manager.create_tag(service, workspace, tags)
+    self.tag_manager.update_tag(service, workspace, tags)
+  
   def handle_trigger(self, service, workspace, triggers):
-      #self.trigger_manager.create_trigger(service, workspace, triggers)
-      self.trigger_manager.update_trigger(service, workspace, triggers)
+    #self.trigger_manager.create_trigger(service, workspace, triggers)
+    self.trigger_manager.update_trigger(service, workspace, triggers)
   
+  def bind_tag_and_trigger(self, service, workspace, bindings):
+    """
+     Bind tag and trigger
+      Args:
+      service: the Tag Manager service object.
+      work_space: the workspace you want to get.
+      bindings: the pair of tag name and trigger name that you're interested in. 
+    """
+    # Get existing tags and triggers 
+    existing_tags = service.accounts().containers().workspaces().tags().list(parent=workspace['path']).execute()
+    existing_trigger = service.accounts().containers().workspaces().triggers().list(parent=workspace["path"]).execute()
+    for binding in bindings:
+      if binding["tag"] in existing_tags["tag"]["name"] and binding["trigger"] in existing_trigger["trigger"]:
+        pass
 
-
-
-
-
-def CreateHelloWorldTrigger(service, workspace):
-  """Create the Hello World Trigger.
-
-  Args:
-    service: the Tag Manager service object.
-    workspace: the workspace to create the trigger within.
-
-  Returns:
-    The created trigger.
-  """
-
-  hello_world_trigger = {
-      'name': 'Hello World Rule',
-      'type': 'PAGEVIEW'
-  }
-
-  return service.accounts().containers().workspaces().triggers().create(
-      parent=workspace['path'],
-      body=hello_world_trigger).execute()
-
-
-def UpdateHelloWorldTagWithTrigger(service, tag, trigger):
-  """Update a Tag with a Trigger.
-
-  Args:
-    service: the Tag Manager service object.
-    tag: the tag to associate with the trigger.
-    trigger: the trigger to associate with the tag.
-  """
-  # Get the tag to update.
-  tag = service.accounts().containers().workspaces().tags().get(
-      path=tag['path']).execute()
-
-  # Update the Firing Trigger for the Tag.
-  tag['firingTriggerId'] = [trigger['triggerId']]
-
-  # Update the Tag.
-  response = service.accounts().containers().workspaces().tags().update(
-      path=tag['path'],
-      body=tag).execute()
-  
-  print(response)
-    
-    
-        
+  def check_tag_and_trigger_is_included(self, existing_tags, existing_trigger, tag, trigger):
+    ## Get names of existings tags and check tag you want to bind is included in
+    # tag_name_is_included = [for tag["name"] in existing_tags["tag"] if lambda tag : existing_tags["tag"]]
+    # trigger_name = map(lambda tag )
+    pass
