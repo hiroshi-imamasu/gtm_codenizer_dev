@@ -1,6 +1,6 @@
 class TriggerManager:
   def __init__(self):
-    print("Trigger manager is instantiated")
+    pass
     
   def create_trigger(self, service, workspace, triggers):
     """Create the trigger.

@@ -1,7 +1,6 @@
 class TagManager:
   def __init__(self):
-    print("Tag manager is instantiated")
-
+    pass
   def create_tag(self, service, work_space, tags):
     """Create the Tag.
 
