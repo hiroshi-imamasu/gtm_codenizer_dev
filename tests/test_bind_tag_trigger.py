@@ -1,7 +1,7 @@
 import unittest 
-from tagManager import TagManager
-from triggerManager import TriggerManager
-from gtmGenerater import GtmGenetator
+from src.tagManager import TagManager
+from src.triggerManager import TriggerManager
+from src.gtmGenerater import GtmGenetator
 
 class Test_bind_tag_trigger(unittest.TestCase):
 

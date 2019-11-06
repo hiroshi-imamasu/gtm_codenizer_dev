@@ -1,43 +1,32 @@
-import unittest 
+import unittest
+from src.tagManager import TagManager
+from src.triggerManager import TriggerManager
+from src.gtmGenerater import GtmGenetator 
 
 class TestUpdateTag(unittest.TestCase):
     def test_tags_update(self):
-        existing_tags = {'tag': [{'path': 'accounts/4702662944/containers/12751981/workspaces/7/tags/2', 'accountId': '4702662944', 'containerId': '12751981', 'workspaceId': '7', 'tagId': '2', 'name': 'Hello World Tag', 'type': 'html', 'parameter': [{'type': 'template', 'key': 'html', 'value': "<script>alert('updated hello world')</script>"}], 'fingerprint': '1571640840415', 'tagManagerUrl': 'localhost:9001/#/container/accounts/4702662944/containers/12751981/workspaces/7/tags/2?apiLink=tag'}]}
-        tags_updated = [
-        {
-            "name": "Hello World Tag",
+        tag_manager = TagManager()
+        trigger_manager = TriggerManager()
+        gtm_generator = GtmGenetator(tag_manager, trigger_manager)
+        config_path = "config/template.json"
+
+        account_id, container_name, work_space_name, tags, triggers, bindings, account_path = gtm_generator.initial_setup(config_path)
+        updating_tag_candidate = [{
+            "name": "test Tag",
             "type": "html",
             "parameter": [{
               "key": "html",
               "type": "template",
-              "value": "<script>alert('reupdated hello world')</script>"
+              "value": "<script>alert('update test')</script>"
             }]
-        }] 
-        expected_output =  [
-            {"path": 'accounts/4702662944/containers/12751981/workspaces/7/tags/2', 
-             "tag": {  
-                 "name": "Hello World Tag",
-                 "type": "html",
-                 "parameter": [{
-                    "key": "html",
-                    "type": "template",
-                    "value": "<script>alert('reupdated hello world')</script>"
-                 }]
-             }
-            }
-        ]
-        print(compare_existing_tags_and_tags_updated(existing_tags, tags_updated))
-        self.assertEqual(compare_existing_tags_and_tags_updated(existing_tags, tags_updated), expected_output)       
-    
-
-
-def compare_existing_tags_and_tags_updated(existing_tags, tags_updated):
-  tags_to_be_updated = []
-  for existing_tag in existing_tags["tag"]:
-    for tag_updated in tags_updated:
-        if tag_updated["name"] == existing_tag["name"]:
-            tags_to_be_updated.append({"path": existing_tag["path"], "tag": tag_updated})
-  return tags_to_be_updated
+        }]
+        service = gtm_generator.get_service('tagmanager', 'v2', 'client_secret.json')
+        # Find the container
+        container = gtm_generator.find_container(service, account_path, container_name)
+        # Get or Create the workspace
+        work_space = gtm_generator.get_work_space(service, container, work_space_name)
+        updated_tag = gtm_generator.handle_tag(service, work_space, updating_tag_candidate, operation="UPDATE")
+        self.assertTrue(updated_tag[0]["name"], "test Tag")
 
 
 

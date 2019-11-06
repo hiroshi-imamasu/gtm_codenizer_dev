@@ -10,6 +10,11 @@
 ```
 python setup.py --config <file_name> --tag <CREATE / UPDATE> --trigger <CREATE / UPDATE> --bind <YES / NO>
 ```
+- example)  template.jsonというファイル名の設定ファイルを使って、tagとtriggerを新規に作成し、それらをbindする場合　
+```  　　
+python setup.py --config template.json --tag CREATE --trigger CREATE --bind YES
+```
+
 # GTM　REST APIに関するReference
 
 
@@ -27,7 +32,7 @@ python setup.py --config <file_name> --tag <CREATE / UPDATE> --trigger <CREATE /
   - [x] 新規triggerの作成
   - [x] triggerの更新
   - [x] tagとtriggerのbind
-  - [] Command line tool化
+  - [x] Command line tool化
   　--ta c / u --tg c / u  --bind
   - [] 要件の再確認
   - [] 微修正

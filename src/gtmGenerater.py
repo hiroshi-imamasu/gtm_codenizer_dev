@@ -143,7 +143,7 @@ class GtmGenetator:
   def handle_tag(self, service, workspace, tags, operation):
     #self.tag_manager.create_tag(service, workspace, tags)
     if operation == "CREATE":
-      self.tag_manager.create_tag(service, workspace, tags)
+      return self.tag_manager.create_tag(service, workspace, tags)
     elif operation == "UPDATE":
       self.tag_manager.update_tag(service, workspace, tags)
     else: 
