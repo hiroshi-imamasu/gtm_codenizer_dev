@@ -1,4 +1,3 @@
-import json
 from tagManager import TagManager
 from triggerManager import TriggerManager
 from gtmGenerater import GtmGenetator
@@ -23,28 +22,21 @@ if __name__ == '__main__':
   gtm_generator = GtmGenetator(tag_manager, trigger_manager)
 
   print("Processing....")
-
-  with open("template.json") as config:
-    data = json.load(config)
-    # Get tag manager account ID
-    account_id = data["account_id"]
-    container_name = data["container_name"]
-    work_space_name = data["work_space_name"]
-    tags = list(data["tags"])
-    triggers = list(data["triggers"])  
-    account_path = 'accounts/%s' % account_id
-    # Authenticate and construct service.
-    service = gtm_generator.get_service('tagmanager', 'v2', 'client_secret.json')
-    # Find the container
-    container = gtm_generator.find_container(service, account_path, container_name)
-    # Get or Create the workspace
-    work_space = gtm_generator.get_work_space(service, container, work_space_name)
-    # Create or Update tags.
-    ## updated_tags = tag_generator.update_tag(service, work_space, tags)
-    ## print(updated_tags)
-    ## tag_generator.create_tag(service, work_space,tags)
-    
-    # Create or Update triggers
-    gtm_generator.handle_trigger(service, work_space, triggers)
-    print("Congrats!! gtm has successfully worked")
+  
+  account_id, container_name, work_space_name, tags, triggers, bindings, account_path = gtm_generator.initial_setup("template.json")
+  # Authenticate and construct service.
+  service = gtm_generator.get_service('tagmanager', 'v2', 'client_secret.json')
+  # Find the container
+  container = gtm_generator.find_container(service, account_path, container_name)
+  # Get or Create the workspace
+  work_space = gtm_generator.get_work_space(service, container, work_space_name)
+  # Create or Update tags.
+  ## updated_tags = tag_generator.update_tag(service, work_space, tags)
+  ## print(updated_tags)
+  ## tag_generator.create_tag(service, work_space,tags)
+  # Create or Update triggers
+  gtm_generator.handle_trigger(service, work_space, triggers)
+  # Bind tags and triggers
+  gtm_generator.handle_bind_tag_and_trigger(service, work_space, bindings)
+  print("Congrats!! gtm has successfully worked")
     
