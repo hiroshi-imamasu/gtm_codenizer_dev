@@ -1,0 +1,28 @@
+{
+    "account_id": "<account_id>",
+    "container_name": "<conainer_name>",
+    "work_space_name": "<work_space_name>",
+    "tags": [
+        {
+            "name": "Hello World Tag",
+            "type": "html",
+            "parameter": [{
+              "key": "html",
+              "type": "template",
+              "value": "<script>alert('reupdated hello world')</script>"
+            }]
+        }
+    ],
+    "triggers": [
+        {
+            "name": "example create",
+            "type": "CLICK"
+        }
+    ],
+    "bindings": [
+        {
+            "tag": "Hello World Tag",
+            "trigger": "example create"
+        }      
+    ]
+}

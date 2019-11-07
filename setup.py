@@ -30,7 +30,7 @@ def main(config, tag, trigger, binding):
   trigger_manager = TriggerManager()
   gtm_generator = GtmGenetator(tag_manager, trigger_manager)
   config_file_path = 'config/%s' % config
-  print("Processing....")
+  print("Processing....\n")
   
   account_id, container_name, work_space_name, tags, triggers, bindings, account_path = gtm_generator.initial_setup(config_file_path)
   # Authenticate and construct service.

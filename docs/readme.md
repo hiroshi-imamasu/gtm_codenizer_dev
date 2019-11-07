@@ -15,6 +15,12 @@ python setup.py --config <file_name> --tag <CREATE / UPDATE> --trigger <CREATE /
 python setup.py --config template.json --tag CREATE --trigger CREATE --bind YES
 ```
 
+- 注意点1. 　
+  - tag / triggerをupdateする際には、必ずbind optionをYESにしてください
+
+- 注意点2. 
+  - 一度作成したtag / triggerの名前は変更しないでください
+
 # GTM　REST APIに関するReference
 
 

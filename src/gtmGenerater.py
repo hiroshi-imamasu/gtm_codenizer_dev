@@ -145,15 +145,15 @@ class GtmGenetator:
     if operation == "CREATE":
       return self.tag_manager.create_tag(service, workspace, tags)
     elif operation == "UPDATE":
-      self.tag_manager.update_tag(service, workspace, tags)
+      return self.tag_manager.update_tag(service, workspace, tags)
     else: 
       print("No tags to be handle\n")
   
   def handle_trigger(self, service, workspace, triggers, operation):
     if operation == "CREATE":
-      self.trigger_manager.create_trigger(service, workspace, triggers)
+      return self.trigger_manager.create_trigger(service, workspace, triggers)
     elif operation == "UPDATE":  
-      self.trigger_manager.update_trigger(service, workspace, triggers)
+      return self.trigger_manager.update_trigger(service, workspace, triggers)
     else:
       print("No triggers to be handle\n")
   
@@ -172,14 +172,15 @@ class GtmGenetator:
       for binding in bindings:
         targeted_tag = self.get_targeted_tag(binding, existing_tags["tag"])
         targeted_trigger = self.get_targeted_trigger(binding, existing_triggers["trigger"])
+        print(targeted_trigger)
         # Check interested trigger and tag existed
         if self.check_targeted_tag_and_trigger_exsist(targeted_tag, targeted_trigger):
           targeted_tag[0]["firingTriggerId"] = targeted_trigger[0]["triggerId"]
           service.accounts().containers().workspaces().tags().update(path=targeted_tag[0]['path'],body=targeted_tag[0]).execute()
         else:
           print("Oops, no trigger or tag found")
-      else:
-        print("No bindings to be handle\n")
+    else:
+      print("No bindings to be handle\n")
 
   def check_targeted_tag_and_trigger_exsist(self, tag, trigger):
       if tag == [] or trigger == []:

@@ -1,0 +1,51 @@
+{
+    "account_id": "4702662944",
+    "container_name": "ec-sample",
+    "work_space_name": "laboratory",
+    "tags": [
+        {
+            "name": "Hello World Tag",
+            "type": "html",
+            "parameter": [{
+              "key": "html",
+              "type": "template",
+              "value": "<script>alert('reupdated hello world')</script>"
+            }]
+        },
+        {
+            "name": "konnnitiwa Tag",
+            "type": "html",
+            "parameter": [{
+              "key": "html",
+              "type": "template",
+              "value": "<script>alert('Konnitiwa')</script>"
+            }]
+        },
+        {
+            "name": "test Tag",
+            "type": "html",
+            "parameter": [{
+              "key": "html",
+              "type": "template",
+              "value": "<script>alert('update test')</script>"
+            }]
+        }
+
+    ],
+    "triggers": [
+        {
+            "name": "example create",
+            "type": "CLICK"
+        },
+        {
+            "name": "example create2",
+            "type": "domReady"
+        }
+    ],
+    "bindings": [
+        {
+            "tag": "Hello World Tag",
+            "trigger": "example create"
+        }
+    ]
+}

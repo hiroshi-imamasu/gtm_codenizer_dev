@@ -12,12 +12,12 @@ class TestUpdateTag(unittest.TestCase):
 
         account_id, container_name, work_space_name, tags, triggers, bindings, account_path = gtm_generator.initial_setup(config_path)
         updating_tag_candidate = [{
-            "name": "test Tag",
+            "name": "Hello World Tag",
             "type": "html",
             "parameter": [{
               "key": "html",
               "type": "template",
-              "value": "<script>alert('update test')</script>"
+              "value": "<script>alert('test data is saved')</script>"
             }]
         }]
         service = gtm_generator.get_service('tagmanager', 'v2', 'client_secret.json')
@@ -26,7 +26,7 @@ class TestUpdateTag(unittest.TestCase):
         # Get or Create the workspace
         work_space = gtm_generator.get_work_space(service, container, work_space_name)
         updated_tag = gtm_generator.handle_tag(service, work_space, updating_tag_candidate, operation="UPDATE")
-        self.assertTrue(updated_tag[0]["name"], "test Tag")
+        self.assertTrue(updated_tag[0]["name"], "Hello World Tag")
 
 
 
