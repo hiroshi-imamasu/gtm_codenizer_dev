@@ -15,7 +15,7 @@ class TagManager:
     existing_tags = service.accounts().containers().workspaces().tags().list(parent=work_space['path']).execute()
     if existing_tags == {}:
       ## In case no tag existed
-      print("no tags existed...")
+      print("no tags existed...\n")
       return list(map(lambda tag: service.accounts().containers().workspaces().tags().create(parent=work_space['path'],body=tag).execute(), tags))
     elif len(existing_tags["tag"]) > 0:
       existing_tags_name = list(map(lambda x: x["name"], existing_tags["tag"]))
@@ -24,7 +24,7 @@ class TagManager:
       if len(new_tags_candidates) > 0:
         return list(map(lambda tag: service.accounts().containers().workspaces().tags().create(parent=work_space['path'],body=tag).execute(), new_tags_candidates))
       else: 
-        print("You should check config file. Something is wrong")
+        print("You should check config file. Something is wrong\n")
   
   def update_tag(self, service, work_space, tags):
     """
@@ -33,7 +33,6 @@ class TagManager:
     existing_tags = service.accounts().containers().workspaces().tags().list(parent=work_space['path']).execute()
     ## Check tags you want to update is included in existing tags
     tags_to_be_updated = self.compare_existing_tags_and_tags_updated(existing_tags, tags)
-    print(tags_to_be_updated)
     return list(map(lambda tag: service.accounts().containers().workspaces().tags().update(path=tag["path"], body=tag["body"]).execute(), tags_to_be_updated))
   
   def compare_existing_tags_and_tags_updated(self, existing_tags, tags_updated):

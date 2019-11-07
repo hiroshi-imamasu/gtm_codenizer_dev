@@ -40,6 +40,6 @@ python setup.py --config template.json --tag CREATE --trigger CREATE --bind YES
   - [x] tagとtriggerのbind
   - [x] Command line tool化
   　--ta c / u --tg c / u  --bind
-  - [] 要件の再確認
-  - [] 微修正
+  - [x] 要件の再確認
+  - [x] 微修正
   - [] Dockernize

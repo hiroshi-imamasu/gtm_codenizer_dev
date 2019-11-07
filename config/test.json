@@ -1,7 +1,7 @@
 {
     "account_id": "4702662944",
     "container_name": "ec-sample",
-    "work_space_name": "laboratory",
+    "work_space_name": "test",
     "tags": [
         {
             "name": "Hello World Tag",
@@ -9,28 +9,18 @@
             "parameter": [{
               "key": "html",
               "type": "template",
-              "value": "<script>alert('reupdated hello world')</script>"
+              "value": "<script>alert('hello world has changed')</script>"
             }]
         },
         {
-            "name": "konnnitiwa Tag",
+            "name": "Create2",
             "type": "html",
             "parameter": [{
               "key": "html",
               "type": "template",
-              "value": "<script>alert('Konnitiwa')</script>"
-            }]
-        },
-        {
-            "name": "test Tag",
-            "type": "html",
-            "parameter": [{
-              "key": "html",
-              "type": "template",
-              "value": "<script>alert('update test')</script>"
+              "value": "<script>console.log('create2')</script>"
             }]
         }
-
     ],
     "triggers": [
         {
@@ -39,13 +29,17 @@
         },
         {
             "name": "example create2",
-            "type": "domReady"
+            "type": "elementVisibility"
         }
     ],
     "bindings": [
         {
             "tag": "Hello World Tag",
             "trigger": "example create"
+        },
+        {
+            "tag": "Create2",
+            "trigger": "example create2"
         }
     ]
 }
