@@ -1,0 +1,6 @@
+google-api-python-client
+pyOpenSSL
+pycrypto
+WebTest
+oauth2client
+click

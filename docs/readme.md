@@ -3,6 +3,7 @@
 # Step1. API TOKENの取得
 - 下記を参考にGTMのTOKENを取得してください
 
+https://developers.google.com/tag-manager/api/v2/devguide
 
 # Step2. Config directory以下に設定ファイルを配置する
 
