@@ -22,7 +22,7 @@ import click
 @click.option("--config", default=None, help="Name of config file")
 @click.option("--tag", default=None, help="Operation for tags")
 @click.option("--trigger", default=None, help="Operation for triggers")
-@click.option("--binding", default=None, help="Operation for bindings")
+@click.option("--binding", default="YES", help="Operation for bindings")
 
 
 def main(config, tag, trigger, binding):
